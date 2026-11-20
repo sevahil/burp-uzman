@@ -4,13 +4,13 @@ Bu liste Linux tarafindaki `kur.sh` kontrolunden ayridir. Linux kontrolu dosyala
 
 ## 1. Surum
 
-- [ ] Help > About: v2026.2.1.
+- [x] Help > About: v2026.2.1. (2026-11-20 ekran goruntusu: Burp Suite Professional v2026.2.1)
 - [ ] Aktif oturumda Burp AI kullanilmiyor.
 
 ## 2. BCheck import
 
-- [ ] Extensions > Custom scan checks > Import > `bchecks/` klasorunu sec (10 dosya).
-- [ ] Hicbir dosya import hatasi vermedi. Hata veren dosya adi ve mesaji kayda gecirildi; duzeltme repoda yapilir, Linux'ta `python3 -I dogrula.py` tekrar calistirilir.
+- [x] Extensions > Custom scan checks > Import: Burp alt klasorlere inmiyor; her alt klasorun ICINE girip dosyalar secilir (passive 3, host-path 5, oob 1, active 1). Ayni dosyayi tekrar import etmek tabloda kopya satir uretir.
+- [x] 10 dosyanin 10'u hatasiz yuklendi (2026-11-20). Ilk turda 2 dosya reddedildi: actuator regex `[[]` Java'da gecersiz; `matches` sagindaki backtick kabul edilmedi. Ikisi duzeltildi, linter kurali eklendi. Hatalar Event log'a degil tabloda kirmizi ucgene ve dosya duzenleyicisinin Errors alanina yazilir.
 - [ ] Tum kontroller scan baslatma diyalogunda secilebilir gorunuyor.
 
 ## 3. BCheck calisma testi (kontrol basina pozitif ve negatif)
@@ -25,7 +25,7 @@ Kontrol listesi 10 dosyadir; her biri icin kendi test hedefinde:
 - [ ] special-characters-reflected: yansitan ve kodlayan sayfalarda dogru davranir.
 - [ ] Her kontrolun yaptigi istekler Logger veya Dashboard'dan incelendi. Host kontrolleri yalnizca GET, govdesiz ve Cookie/Authorization basliksiz gider; beklenmeyen yikici istek yok.
 - [ ] Insertion point kontrolleri (header-ssrf-collaborator, special-characters-reflected) Burp'un yerlesik aktif taramasi gibi tabani yeniden gonderir; DSL'de metoda gore kosullanamaz. Taban istek POST/DELETE olan yollar crawl kapsaminin disinda tutulur (`configs/recipe.md`) ve bu kontrollerin istekleri Logger'dan incelenir.
-- [ ] Import `status_code is "200"` veya backtick'li `matches` ifadesini reddederse: ilkini `matches "200"`, ikincisini `in` operatorune cevirip dogrula.py ve bu liste yeniden calistirilir.
+- [x] `status_code is "200"` kabul edildi; `matches` sagindaki backtick reddedildi ve `in` ile degistirildi (`in`'in solunda backtick kabul edildi).
 - [ ] Istek yuku olculdu: host basina yaklasik 5, her genel insertion point icin 1, her header insertion point icin 1 ek istek.
 - [ ] Ayni bulgularda Burp'un kendi kontrolleriyle ortusme gozlendi; gereksiz olan kontrol repodan cikarilir.
 
