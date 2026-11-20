@@ -1,0 +1,21 @@
+metadata:
+    language: v2-beta
+    name: "Exposed .git repository"
+    description: "Requests /.git/HEAD and confirms by the ref line"
+    author: "BurpUzman"
+    tags: "active", "disclosure", "source-code"
+
+given host then
+    send request called probe:
+        replacing path: "/.git/HEAD"
+        replacing method: "GET"
+        removing body
+        removing headers: "Cookie"
+        removing headers: "Authorization"
+    if {probe.response.status_code} is "200" and {probe.response.body} matches "(?s)^ref: refs/(heads|tags)/.*" then
+        report issue:
+            severity: high
+            confidence: certain
+            remediation: "Block access to the .git directory and remove it from the web root."
+            detail: "The /.git/HEAD file is publicly readable, which usually allows the full repository and its history to be reconstructed."
+    end if

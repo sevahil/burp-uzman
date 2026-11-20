@@ -1,0 +1,21 @@
+metadata:
+    language: v2-beta
+    name: "Exposed .env file"
+    description: "Requests /.env and confirms by secret-style assignments in the body"
+    author: "BurpUzman"
+    tags: "active", "disclosure", "secrets"
+
+given host then
+    send request called probe:
+        replacing path: "/.env"
+        replacing method: "GET"
+        removing body
+        removing headers: "Cookie"
+        removing headers: "Authorization"
+    if {probe.response.status_code} is "200" and {probe.response.body} matches "(?ms).*^(APP_KEY|DB_PASSWORD|SECRET_KEY|AWS_SECRET_ACCESS_KEY|DATABASE_URL|MAIL_PASSWORD)=.*" then
+        report issue:
+            severity: high
+            confidence: certain
+            remediation: "Remove the .env file from the web root and rotate every secret it contained."
+            detail: "The /.env file is publicly readable and contains secret-style assignments."
+    end if

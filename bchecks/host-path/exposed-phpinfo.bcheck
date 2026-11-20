@@ -1,0 +1,21 @@
+metadata:
+    language: v2-beta
+    name: "phpinfo page exposed"
+    description: "Requests /phpinfo.php and confirms by the phpinfo title"
+    author: "BurpUzman"
+    tags: "active", "disclosure", "php"
+
+given host then
+    send request called probe:
+        replacing path: "/phpinfo.php"
+        replacing method: "GET"
+        removing body
+        removing headers: "Cookie"
+        removing headers: "Authorization"
+    if {probe.response.status_code} is "200" and {probe.response.body} matches "(?is).*<title>phpinfo[(][)]</title>.*" then
+        report issue:
+            severity: medium
+            confidence: certain
+            remediation: "Delete the phpinfo page from the web root."
+            detail: "The /phpinfo.php page is reachable and discloses PHP configuration, loaded modules, environment variables and filesystem paths."
+    end if

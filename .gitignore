@@ -1,0 +1,68 @@
+*.burp
+*.har
+*.token
+*.env
+auth/private/
+configs/private/
+raporlar/
+__pycache__/
+*.pyc
+
+#GITHUB-AKTAR-BASLANGIC
+# github-aktar.sh üretti — bu blok her aktarımda yenilenir.
+# Bu işaretlerin DIŞINDAKİ kendi kurallarına dokunulmaz.
+
+# github-aktar — ortak kurallar (her repoya yazılır)
+# Bu dosya github-aktar.sh tarafından üretilir; elle düzenleme,
+# ~/.github-aktar/gitignore/ altındaki şablonu düzenle.
+
+# --- yedekler: git geçmişi bunların yerini alır ---
+*.bak
+*.bak-*
+*.bak2-*
+*.bak3-*
+*.orig
+*.rej
+*~
+
+# --- loglar ve çalışma çıktıları ---
+*.log
+logs/
+loglar/
+*-logs/
+*-loglari/
+sonuclar/
+reports/
+raporlar/
+cases/
+tmp/
+.tmp/
+
+# --- sırlar: asla versiyonlanmaz ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.kdbx
+*.ovpn
+id_rsa*
+id_dsa*
+id_ecdsa*
+id_ed25519*
+credentials
+.netrc
+.pgpass
+.npmrc
+
+# --- işletim sistemi / editör ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+#GITHUB-AKTAR-BITIS

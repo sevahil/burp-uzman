@@ -1,0 +1,21 @@
+metadata:
+    language: v2-beta
+    name: "Spring Boot actuator env endpoint exposed"
+    description: "Requests /actuator/env without credentials and confirms the JSON structure of the env document"
+    author: "BurpUzman"
+    tags: "active", "disclosure", "spring"
+
+given host then
+    send request called probe:
+        replacing path: "/actuator/env"
+        replacing method: "GET"
+        removing body
+        removing headers: "Cookie"
+        removing headers: "Authorization"
+    if {probe.response.status_code} is "200" and {probe.response.headers} matches "(?is).*content-type:[^\n]*json.*" and {probe.response.body} matches "(?s)^[ ]*[{].*activeProfiles.*propertySources.[ ]*:[ ]*[[].*" then
+        report issue:
+            severity: high
+            confidence: firm
+            remediation: "Restrict actuator endpoints to an internal management port or require authentication."
+            detail: "The /actuator/env endpoint is reachable and returns environment property sources, which commonly include credentials and internal hostnames."
+    end if

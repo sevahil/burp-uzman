@@ -1,0 +1,23 @@
+metadata:
+    language: v2-beta
+    name: "Content-Security-Policy missing or weak"
+    description: "HTML responses without a Content-Security-Policy header, or with unsafe-inline or unsafe-eval in script-src or default-src"
+    author: "BurpUzman"
+    tags: "passive", "headers", "csp"
+
+given response then
+    if {latest.response.headers} matches "(?is).*content-type:[ ]*text/html.*" and not({latest.response.headers} matches "(?is).*content-security-policy:.*") then
+        report issue:
+            name: "Content-Security-Policy header missing"
+            severity: low
+            confidence: certain
+            remediation: "Send a restrictive Content-Security-Policy header on HTML responses."
+            detail: "The HTML response has no Content-Security-Policy header, so the browser applies no policy against injected script."
+    else if {latest.response.headers} matches "(?is).*content-security-policy:[^\n]*(script-src|default-src)[^;\n]*(unsafe-inline|unsafe-eval).*" then
+        report issue:
+            name: "Content-Security-Policy allows unsafe script execution"
+            severity: low
+            confidence: certain
+            remediation: "Remove unsafe-inline and unsafe-eval from script-src and default-src and use nonces or hashes."
+            detail: "The script-src or default-src directive contains unsafe-inline or unsafe-eval, which negates most of the policy protection against injected script."
+    end if

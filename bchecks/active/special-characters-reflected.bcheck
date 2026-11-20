@@ -1,0 +1,19 @@
+metadata:
+    language: v2-beta
+    name: "Special characters reflected unencoded"
+    description: "Triage signal: a marker followed by quote and angle-bracket characters returns unencoded"
+    author: "BurpUzman"
+    tags: "active", "reflection", "triage"
+
+define: marker = {random_str(8)}
+
+given insertion point then
+    send payload called probe:
+        appending: `{marker}"'<>`
+    if {probe.response.body} matches `(?s).*{marker}"'<>.*` then
+        report issue:
+            severity: info
+            confidence: tentative
+            remediation: "Encode output for the context it is written into."
+            detail: "The injected marker and the characters quote, apostrophe and angle brackets were returned unencoded. This is a triage signal and not proof of cross-site scripting; confirm the output context manually."
+    end if

@@ -1,0 +1,27 @@
+metadata:
+    language: v2-beta
+    name: "Out-of-band interaction via request header"
+    description: "Injects a Collaborator URL into header insertion points and grades the interaction type"
+    author: "BurpUzman"
+    tags: "active", "collaborator", "ssrf"
+
+define: collab = {generate_collaborator_address()}
+
+given header insertion point then
+    send payload called probe:
+        replacing: `http://{collab}/`
+    if http interactions then
+        report issue:
+            name: "HTTP interaction triggered by request header"
+            severity: medium
+            confidence: firm
+            remediation: "Do not fetch or resolve URLs taken from request headers, and restrict outbound requests from the application tier."
+            detail: "A Collaborator HTTP request was received after a Collaborator URL was placed in a request header. The server fetched a URL it received in a header, which indicates server-side request forgery. Check the interaction source address before rating impact."
+    else if dns interactions then
+        report issue:
+            name: "DNS interaction triggered by request header"
+            severity: info
+            confidence: tentative
+            remediation: "Review how request headers are logged or resolved by proxies and application components."
+            detail: "Only a Collaborator DNS lookup was received. This can come from a resolver, WAF or log pipeline rather than an exploitable application fetch, so confirm manually before reporting."
+    end if

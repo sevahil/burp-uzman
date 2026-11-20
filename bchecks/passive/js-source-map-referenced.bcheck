@@ -1,0 +1,15 @@
+metadata:
+    language: v2-beta
+    name: "JavaScript source map referenced"
+    description: "JavaScript responses that reference a source map"
+    author: "BurpUzman"
+    tags: "passive", "javascript", "disclosure"
+
+given response then
+    if {latest.response.headers} matches "(?is).*content-type:[^\n]*javascript.*" and {latest.response.body} matches "(?s).*sourceMappingURL=[^\n]*[.]map.*" then
+        report issue:
+            severity: info
+            confidence: firm
+            remediation: "Do not publish source maps for production bundles, or restrict them to authorised users."
+            detail: "The script references a source map. If the map file is reachable it discloses original source code, comments and internal paths. Fetch the referenced map manually to confirm."
+    end if

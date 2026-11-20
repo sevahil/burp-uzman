@@ -1,0 +1,21 @@
+metadata:
+    language: v2-beta
+    name: "Apache server-status exposed"
+    description: "Requests /server-status and confirms by the status page heading"
+    author: "BurpUzman"
+    tags: "active", "disclosure", "apache"
+
+given host then
+    send request called probe:
+        replacing path: "/server-status"
+        replacing method: "GET"
+        removing body
+        removing headers: "Cookie"
+        removing headers: "Authorization"
+    if {probe.response.status_code} is "200" and {probe.response.body} matches "(?is).*Apache Server Status for.*" then
+        report issue:
+            severity: medium
+            confidence: certain
+            remediation: "Restrict /server-status to localhost or an administrative network."
+            detail: "The Apache server-status page is reachable and discloses live request URLs, client addresses and worker state."
+    end if

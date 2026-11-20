@@ -1,0 +1,15 @@
+metadata:
+    language: v2-beta
+    name: "Framework debug mode exposed"
+    description: "Responses that carry the signature of a framework debugger, debug toolbar or debug error page"
+    author: "BurpUzman"
+    tags: "passive", "debug", "disclosure"
+
+given response then
+    if {latest.response.body} matches "(?is).*(Werkzeug Debugger|you have <code>DEBUG = True|xdebug-error|Whoops! There was an error|id=.sfwdt|sf-toolbar).*" then
+        report issue:
+            severity: medium
+            confidence: firm
+            remediation: "Disable the framework debug mode and debug toolbars in every internet-reachable environment."
+            detail: "The response contains the signature of a framework debugger or debug error page. Debug modes commonly expose source code, configuration and sometimes remote code execution."
+    end if
