@@ -10,7 +10,7 @@ define: marker = {random_str(8)}
 given insertion point then
     send payload called probe:
         appending: `{marker}"'<>`
-    if {probe.response.body} matches `(?s).*{marker}"'<>.*` then
+    if `{marker}"'<>` in {probe.response.body} then
         report issue:
             severity: info
             confidence: tentative

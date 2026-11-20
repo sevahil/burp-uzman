@@ -72,6 +72,16 @@ class BCheckLint(unittest.TestCase):
         for sample in (PASSIVE, HOST, INSERTION):
             self.assertEqual(dogrula.lint_bcheck(sample)[0], [])
 
+    def test_matches_with_backtick_rejected(self):
+        text = (
+            "metadata:\n    language: v2-beta\n    name: \"x\"\n    description: \"y\"\n    author: \"z\"\n    tags: \"a\"\n\n"
+            "given insertion point then\n    send payload called p:\n        appending: \"x\"\n"
+            "    if {p.response.body} matches `(?s).*x.*` then\n        report issue:\n"
+            "            severity: info\n            confidence: tentative\n            remediation: \"r\"\n            detail: \"d\"\n    end if\n"
+        )
+        errors, _ = dogrula.lint_bcheck(text)
+        self.assertTrue(any("matches" in e[1] for e in errors), errors)
+
     def test_metadata_must_be_first(self):
         text = PASSIVE.replace("metadata:\n", "", 1)
         self.assertTrue(any("metadata" in m for m in errs(text)))
@@ -306,6 +316,12 @@ class Gitignore(unittest.TestCase):
     def test_missing_file_reported(self):
         with tempfile.TemporaryDirectory() as root:
             self.assertEqual(dogrula.check_gitignore(root), [".gitignore yok"])
+
+    def test_unrelated_negation_allowed(self):
+        with tempfile.TemporaryDirectory() as d:
+            with open(os.path.join(d, ".gitignore"), "w") as fh:
+                fh.write("\n".join(dogrula.REQUIRED_IGNORE) + "\n.env.*\n!.env.example\n")
+            self.assertEqual(dogrula.check_gitignore(d), [])
 
     def test_negation_rejected(self):
         with tempfile.TemporaryDirectory() as root:

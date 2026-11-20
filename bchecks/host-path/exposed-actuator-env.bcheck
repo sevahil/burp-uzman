@@ -12,7 +12,7 @@ given host then
         removing body
         removing headers: "Cookie"
         removing headers: "Authorization"
-    if {probe.response.status_code} is "200" and {probe.response.headers} matches "(?is).*content-type:[^\n]*json.*" and {probe.response.body} matches "(?s)^[ ]*[{].*activeProfiles.*propertySources.[ ]*:[ ]*[[].*" then
+    if {probe.response.status_code} is "200" and {probe.response.headers} matches "(?is).*content-type:[^\n]*json.*" and {probe.response.body} matches "(?s).*activeProfiles.*propertySources.*" then
         report issue:
             severity: high
             confidence: firm

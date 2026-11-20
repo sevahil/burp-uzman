@@ -1,5 +1,6 @@
 import hashlib
 import json
+import fnmatch
 import os
 import re
 import sys
@@ -33,6 +34,7 @@ ELIF = re.compile(r"^else\s+if\s+(.+?)\s+then$")
 ELSE = re.compile(r"^else\s+then$")
 CONDITION_OP = re.compile(r"\b(matches|differs\s+from|in|is)\b|interactions")
 ENDIF = re.compile(r"^end\s+if$")
+BACKTICK_MATCHES = re.compile(r"\bmatches\s*`")
 SEND_REQ = re.compile(r"^send\s+request(?:\s+called\s+(\S+?))?\s*:")
 SEND_PAY = re.compile(r"^send\s+payload(?:\s+called\s+(\S+?))?\s*:")
 REPORT = re.compile(r"^report\s+issue(\s+and\s+continue)?\s*:")
@@ -179,11 +181,15 @@ def lint_bcheck(text):
                 errors.append((no, "if olmadan else"))
             if ELIF.match(s) and not CONDITION_OP.search(ELIF.match(s).group(1)):
                 errors.append((no, "gecersiz kosul"))
+            if BACKTICK_MATCHES.search(s):
+                errors.append((no, "matches yalniz cift tirnakli duz regex alir"))
             i += 1
             continue
         if IF.match(s):
             if not CONDITION_OP.search(IF.match(s).group(1)):
                 errors.append((no, "gecersiz kosul"))
+            if BACKTICK_MATCHES.search(s):
+                errors.append((no, "matches yalniz cift tirnakli duz regex alir"))
             stack.append(no)
             i += 1
             continue
@@ -357,6 +363,13 @@ def manifest_check(root):
     return errors
 
 
+def _negates_required(pattern):
+    for req in REQUIRED_IGNORE:
+        if pattern == req or fnmatch.fnmatch(pattern, req) or req.startswith(pattern):
+            return True
+    return False
+
+
 def check_gitignore(root):
     path = os.path.join(root, ".gitignore")
     if not os.path.isfile(path):
@@ -364,7 +377,11 @@ def check_gitignore(root):
     with open(path, encoding="utf-8") as fh:
         entries = {ln.strip() for ln in fh if ln.strip()}
     problems = [".gitignore eksik giris: " + e for e in REQUIRED_IGNORE if e not in entries]
-    problems.extend(".gitignore negasyon yasak: " + e for e in sorted(entries) if e.startswith("!"))
+    problems.extend(
+        ".gitignore negasyon yasak: " + e
+        for e in sorted(entries)
+        if e.startswith("!") and _negates_required(e[1:])
+    )
     return problems
 
 
