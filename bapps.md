@@ -13,7 +13,37 @@ BApp Store listesinde adlari ve son guncelleme tarihleri 2026-11-20'de dogruland
 | Backslash Powered Scanner | 2025-04-30 | Injection sinyalleri icin ek aktif tarama | Daha eski; yukleme kabulu sart |
 | InQL - GraphQL Scanner | 2026-02-16 | GraphQL introspection ve tarama | Yalnizca GraphQL hedeflerde |
 | JWT Editor | 2026-09-07 | JWT inceleme ve manipulasyon | Manuel arac |
-| Autorize | 2026-02-24 | Roller arasi yetki kontrolu (IDOR/BOLA) | Manuel; `kapsam/recipe.md` B |
+| Autorize | 2026-02-24 | Roller arasi yetki kontrolu (IDOR/BOLA) | Manuel; `kapsam/recipe.md` B; Python (Jython) ister, 2026-11-20'de kurulmadi, Auth Analyzer ayni isi Java ile yapiyor |
+
+## Kurulum sirasi (kabul 1. tur, 2026-11-20)
+
+Her adim: Extensions > BApp Store > ara > Install. Kurduktan sonra Extensions > Installed'da hatasiz yuklendigi ve Errors/Output sekmesinin temiz oldugu dogrulanir; hata varsa eklenti adi ve mesaj kayda gecirilir.
+
+1. Param Miner
+2. Active Scan++
+3. Backslash Powered Scanner
+4. Auth Analyzer (Autorize Jython istedigi icin atlandi)
+
+HTTP Request Smuggler, JWT Editor, InQL ve Collaborator Everywhere hedefe ve musteri onayina gore sonradan eklenir.
+
+## Ek adaylar (arastirma 2026-11-20)
+
+Tarih sutunu GitHub pushed_at degeridir, BApp Store yayin tarihi degildir; 2026.2.1 uyumu yuklenince dogrulanir.
+
+| BApp | GitHub son commit | Ne ekler | Dikkat |
+|---|---|---|---|
+| Auth Analyzer | 2026-09-03 | Birden cok kullaniciyla es zamanli yetki testi | Manuel; `kapsam/recipe.md` B |
+| JS Miner | 2023-07-20 | JS dosyalarinda gizli uc nokta ve sir arama | Eski; yukleme kabulu sart |
+| Hackvertor | 2026-11-18 | Istek basina otomatik imza, HMAC, zaman damgasi hesabi | Manuel arac |
+| Logger++ | 2024-06-12 | Tum trafigi filtrelenebilir tabloda tutar | Eski; musteri verisi loglanir, proje dosyasi korunur |
+| Turbo Intruder | 2026-11-13 | Yuksek hizli ozel saldiri betikleri | Hedefe yuk bindirir; yazili onay ve dusuk hiz |
+| SAML Raider | 2026-02-24 | SAML/SSO test araci | Yalnizca SSO kullanan hedefte |
+
+## Kurulmayanlar
+
+- Burp AI Agent, MCP Server ve benzeri yapay zeka eklentileri: trafigi LLM'e tasir; musteri verisi disari gitmez kurali ve Burp AI kredisi olmadigi icin kurulmaz.
+- Java Deserialization Scanner (2021), Freddy (2020), Upload Scanner (2023): bakimsiz.
+- Burp Bounty (2024-04): ozel kural isi bu repodaki BCheck'lerle yapilir.
 
 ## Bayat (2021'den beri guncellenmemis)
 

@@ -11,7 +11,7 @@ Bu liste Linux tarafindaki `kur.sh` kontrolunden ayridir. Linux kontrolu dosyala
 
 - [x] Extensions > Custom scan checks > Import: Burp alt klasorlere inmiyor; her alt klasorun ICINE girip dosyalar secilir (passive 3, host-path 5, oob 1, active 1). Ayni dosyayi tekrar import etmek tabloda kopya satir uretir.
 - [x] 10 dosyanin 10'u hatasiz yuklendi (2026-11-20). Ilk turda 2 dosya reddedildi: actuator regex `[[]` Java'da gecersiz; `matches` sagindaki backtick kabul edilmedi. Ikisi duzeltildi, linter kurali eklendi. Hatalar Event log'a degil tabloda kirmizi ucgene ve dosya duzenleyicisinin Errors alanina yazilir.
-- [ ] Tum kontroller scan baslatma diyalogunda secilebilir gorunuyor.
+- [x] Tum kontroller scan baslatma diyalogunda secilebilir (2026-11-20): New scan > Crawl and audit > Scan configuration > Load > `Audit checks - BChecks only`, sol altta Audit configuration > Scan checks > Custom sekmesinde 10 kutucuk. Surumde Select from library yerine Load dugmesi var.
 
 ## 3. BCheck calisma testi (kontrol basina pozitif ve negatif)
 
@@ -40,7 +40,7 @@ Kontrol listesi 10 dosyadir; her biri icin kendi test hedefinde:
 
 ## 6. BApp'ler
 
-- [ ] Kullanilacak her BApp 2026.2.1'de yuklendi, hata gunlugu temiz.
+- [~] Param Miner, Active Scan++, Backslash Powered Scanner, Auth Analyzer yuklendi ve Installed'da isaretli (2026-11-20, kullanici bildirimi); Errors/Output sekmesi temizligi henuz teyit edilmedi. Autorize Jython istedigi icin atlandi.
 - [ ] `bapps.md` kayit alanlari dolduruldu.
 
 ## 7. Argus aktarimi
